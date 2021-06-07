@@ -48,9 +48,10 @@ sicepat = CleanText(df3)
 
 # print(jne.head(300))
 
-df_merged = pd.concat([jne.head(300), jnt.head(300), sicepat.head(300)], ignore_index=True)
+# df_merged = pd.concat([jne.head(300), jnt.head(300), sicepat.head(300)], ignore_index=True)
+df_merged = pd.concat([sicepat.head(300)], ignore_index=True)
 # print(df_merged)
-df_merged.to_csv("data.csv")
+df_merged.to_csv("sicepat300.csv")
 
 
 # path = "./"

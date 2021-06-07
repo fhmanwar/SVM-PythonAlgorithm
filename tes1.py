@@ -24,14 +24,14 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 '''=================== Import Data ===================='''
-df = pd.read_csv('data.csv')
+df = pd.read_csv('./dataset/jne300.csv')
 
 jakarta = pytz.timezone('Asia/Jakarta')
 #df['datetime_created'] = df['created_at'].apply(lambda x: datetime.strptime(x,'%a %b %d %H:%M:%S %z %Y').replace(tzinfo=pytz.UTC).astimezone(jakarta))
 #df['date_created'] = df['datetime_created'].apply(lambda x: x.date())
 #df['time_created'] = df['datetime_created'].apply(lambda x: x.time())
 #df = df.drop(['datetime_created'],axis=1)
-df.head(900)
+# df.head(900)
 
 '''=================== Pre-Processing ( Cleanning , Stemming , Stopword Removal , TF-IDF ) ===================='''
 # Removing Duplicate if any
@@ -327,13 +327,14 @@ df_sen = pd.DataFrame(sentiment_data,columns = sencol)
 cek_df = pd.DataFrame([])
 cek_df['text'] = df['original_text'].copy()
 cek_df['sentiment']  = df_sen['sentiment'].copy()
-print(cek_df.head(900))
+cek_df['Label_sentiment']  = np.where(cek_df['sentiment'] > 0, 'Positif', 'Negatif')
+print(cek_df.head(300))
 # cek_df.to_csv("result.csv")
 
 '''=================== Classification Using SVM ===================='''
 df['sentiment'] = df_sen['sentiment']
 # df.head(900)
-# print(cek_df)
+# print(df)
 
 def conf_mat(data, label) : 
     x_train, x_test, y_train, y_test = train_test_split(data, label, test_size=0.2)
