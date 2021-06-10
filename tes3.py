@@ -352,6 +352,8 @@ def kmeanscluster(data) :
     # kmeans = KMeans(n_clusters=3, init='k-means++', n_init=10, max_iter=300, random_state=0)
     # Y_kmeans = kmeans.fit_predict(y_test)
 
+    plt.scatter(kmeans.labels_[:, 0], kmeans.labels_[:, 1], s=70, c='cyan', label= 'Cluster 2')
+
     # --- Menampilkan pusat cluster ---
     print(kmeans.cluster_centers_)
     # --- Menampilkan Hasil Kluster ---
@@ -403,8 +405,8 @@ indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vect
 
 # data = 
 
-print(count_vectorizer)
-print(vectorized_data)
+# print(count_vectorizer)
+# print(vectorized_data)
 # print(data)
 # print(label)
 conf_mat(indexed_data,label)
