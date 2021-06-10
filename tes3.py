@@ -22,7 +22,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 from sklearn import svm
 from scipy.sparse import hstack
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 
 '''=================== Import Data ===================='''
@@ -335,26 +335,43 @@ cek_df['Label_sentiment']  = np.where(cek_df['sentiment'] > 0, 'Positif', 'Negat
 
 label = np.where(cek_df['sentiment'] > 0, 1, 0)
 
-def kmeanscluster() : 
+def kmeanscluster(data) : 
     # x_train, x_test, y_train, y_test = train_test_split(data, label, test_size=0.2)
     # print(y_test)
 
-    # --- Menentukan dan mengkonfigurasi fungsi kmeans ---
-    kmeans = KMeans(n_clusters = 3, random_state=123)
-    # --- Menentukan kluster dari data ---
-    kmeans.fit(cek_df)
+    vectorizer = TfidfVectorizer(stop_words='english')
+
+    X = vectorizer.fit_transform(data)
+    kmeans = KMeans(n_clusters=2, init='k-means++', max_iter=300, n_init=1, random_state=0)
+    kmeans.fit(X)
+
+    # # --- Menentukan dan mengkonfigurasi fungsi kmeans ---
+    # kmeans = KMeans(n_clusters = 3, random_state=123)
+    # # --- Menentukan kluster dari data ---
+    # kmeans.fit(X)
     # kmeans = KMeans(n_clusters=3, init='k-means++', n_init=10, max_iter=300, random_state=0)
     # Y_kmeans = kmeans.fit_predict(y_test)
+
+    # --- Menampilkan pusat cluster ---
+    print(kmeans.cluster_centers_)
+    # --- Menampilkan Hasil Kluster ---
+    print(kmeans.labels_)
+    # --- Menambahkan Kolom "kluster" Dalam Data Frame Driver ---
+    cek_df["kluster"] = kmeans.labels_
+    centers = kmeans.cluster_centers_
+    plt.scatter(centers[:,0], centers[:,1], c='red', s=200, alpha=1 , marker="s")
+
+    plt.title("Hasil Klustering K-Means")
+    plt.show()
+
 
 # kmeans = KMeans(n_clusters = 3, random_state=123)
 # kmeans.fit(cek_df['text'])
 # print(kmeans.cluster_centers_)
+kmeanscluster(cek_df['text'])
 
-# print(df_sen)
-# plt.scatter(cek_df['sentiment'], label, c='red', s=200, alpha=1 , marker="s")
-# plt.show()
-plt.scatter(cek_df['sentiment'], cek_df['Label_sentiment'], c='red', s=200, alpha=1 , marker="s")
-plt.show()
+
+
 
 '''=================== Classification Using SVM ===================='''
 df['sentiment'] = df_sen['sentiment']
